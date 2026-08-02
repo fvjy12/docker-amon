@@ -54,8 +54,9 @@ docker/
 ### 1. Клонируй и настрой
 
 ```bash
-git clone https://github.com/fvjy12/amon-docker.git
-cd amon-docker
+git clone https://github.com/fvjy12/docker-amon.git
+cd docker-amon
+
 
 # Настрой окружение
 cp .env.example .env
