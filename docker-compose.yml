@@ -1,0 +1,45 @@
+# ============================================
+#  AMON DOCKER - Production Ready
+#  Docker Compose Configuration
+# ============================================
+
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: amon-app:latest
+    container_name: amon-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    volumes:
+      - app_data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - amon_network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  app_data:
+    name: amon_app_data
+
+networks:
+  amon_network:
+    name: amon_network
+    driver: bridge
